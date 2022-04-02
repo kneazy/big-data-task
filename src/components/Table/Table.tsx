@@ -1,10 +1,13 @@
 import {FC, useEffect, useState} from "react";
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+
+import { setSelected } from "../../store/actions/setSelected";
 import {TableBody, TableHead} from "./components";
 import arrowUp from './images/up_arrow.png';
 import arrowDown from './images/down_arrow.png';
 import defaultImage from './images/default.png';
-import { Link } from "react-router-dom";
 
 type SortOrderType = "asc" | "desc";
 
@@ -14,6 +17,7 @@ type TableProps = {
 
 export const Table: FC<TableProps> = ({ data }) => {
   const [tableData, setTableData] = useState<any[]>([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (data.length) {
@@ -21,12 +25,16 @@ export const Table: FC<TableProps> = ({ data }) => {
     }
   }, [data])
 
+  const handleRowClick = (data: any) => {
+    dispatch(setSelected(data))
+  } 
+
   const columns = [
     {
       label: "Company Name",
       accessor: "companyName",
       sortable: true,
-      Cell: (data: any) => <Link to='./details'>{ data }</Link>
+      Cell: (col: any, data: any) => <Link to={`./details/${data?.symbol}`} onClick={() => handleRowClick(data)} >{ col }</Link>
     },
     {
       label: "Symbol",

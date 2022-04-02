@@ -1,0 +1,1 @@
+export type ReduxProps = Record<string, any>

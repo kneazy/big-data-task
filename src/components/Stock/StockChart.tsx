@@ -1,8 +1,19 @@
 import { FC } from 'react';
+import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 
-export const StockChart: FC<any> = ({ options, highcharts }) => <HighchartsReact
-  highcharts={highcharts}
-  constructorType={'stockChart'}
-  options={options}
-/>
+import { GroupedHistoryType } from '../types';
+import { getOptions } from '../utils';
+
+type StockChartProps = {
+  data: GroupedHistoryType;
+}
+export const StockChart: FC<StockChartProps> = ({ data }) => {
+  if (!data) return null
+
+  return <HighchartsReact
+    highcharts={Highcharts}
+    constructorType={'stockChart'}
+    options={getOptions(data)}
+  />
+}

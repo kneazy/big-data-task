@@ -1,52 +1,63 @@
 import {FC, useEffect, useState} from "react"
 import {useDispatch, useSelector} from "react-redux";
-import {createSelector} from "reselect";
-import Styled from 'styled-components';
+import styled from 'styled-components';
 
 import {Table} from "../components";
-import { Pagination } from "../components/Pagination";
+import { Pagination } from "../components";
 import {getStockList} from "../store/actions/getStockList";
+import { ReduxProps } from "../types";
 
-const getReduxData = createSelector(
-  (state : any) => state.stockListData, 
-  (stockList : any) => ({ stockList })
-);
+const postsPerPage = 10
 
 export const StockListPage: FC = () => {
-  const { stockList } = useSelector(getReduxData)
+  const stockList = useSelector<ReduxProps, any>((state) => state.stockListData)
   const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(10);
 
   useEffect(() => {
-    dispatch(getStockList())
-  }, [dispatch]);
+    if (!stockList.data.length) {
+      dispatch(getStockList())
+    }
+  }, [dispatch, stockList.data.length]);
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = stockList.data.slice(indexOfFirstPost, indexOfLastPost);
 
-  // Change page
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  console.log(stockList);
   return (
-    <>
-      <TableContainer>
-        <Table data={currentPosts} />
-      </TableContainer>
-      <Pagination
-          postsPerPage={postsPerPage}
-          totalPosts={stockList.data.length}
-          paginate={paginate}
-      />
-    </>
+    <Wrapper>
+      {stockList.fetching ? (
+        <h1>...Loading</h1>
+      ) : (
+        <>
+          <TableContainer>
+            <Table data={currentPosts} />
+          </TableContainer><PaginationContainer>
+          <Pagination
+            postsPerPage={postsPerPage}
+            totalPosts={stockList.data.length}
+            paginate={paginate}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage} />
+          </PaginationContainer>
+        </>
+      )}
+    </Wrapper>
   )
 }
 
-const TableContainer = Styled.div `
-  max-width: 800px;
-  max-height: 600px;
-  margin: 0 auto;
+const TableContainer = styled.div `
+  max-height: 500px;
   overflow: auto;
+`;
+
+const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: end;
+`
+const Wrapper = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
 `;

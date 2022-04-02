@@ -18,7 +18,7 @@ export const TableBody: FC<TableBodyProps> = ({ tableData, columns }) => {
       <tr key={data?.symbol}>
        {columns.map((column: any) => {
          if (column?.Cell) {
-          const col = column?.Cell(data[column.accessor])
+          const col = column?.Cell(data[column.accessor], data)
           return <td key={ column.accessor }>{ col }</td>
          }
          return <td key={ column.accessor }>{ data[column.accessor] || "——" }</td>

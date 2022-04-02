@@ -9,7 +9,7 @@ export const Router: FC = () => {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<StockListPage />}/>
-          <Route path='/detail' element={<StockDeatailPage />}/>
+          <Route path='/details/:id' element={<StockDeatailPage />}/>
         </Routes>
       </BrowserRouter>
     </Wrapper>
