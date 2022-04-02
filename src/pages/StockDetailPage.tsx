@@ -38,11 +38,11 @@ export const StockDeatailPage: FC = () => {
           <Title>{selected?.symbol}</Title>
           <Description>{selected?.companyName}</Description>
           <Earnings>Earnings: {selected?.latestTime}</Earnings>
-          <MarketCap>Market Cap: ${selected?.marketCap.toLocaleString()}</MarketCap>
+          <MarketCap>Market Cap: ${selected?.marketCap?.toLocaleString()}</MarketCap>
         </div>
         <div>
-          <Price>{selected.latestPrice}</Price>
-          <PriceChangeColor isPozitive={selected.change > 0} >{selected.change}%</PriceChangeColor>
+          <Price>{selected?.latestPrice}</Price>
+          <PriceChangeColor isPozitive={selected?.change > 0} >{selected.change}%</PriceChangeColor>
         </div>
       </HeaderContainer>
       <StockChartsContainer />

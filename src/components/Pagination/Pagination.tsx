@@ -28,7 +28,7 @@ export const Pagination: FC < PaginationProps > = ({postsPerPage, totalPosts, pa
       <PaginationWrapper>
         <ListItem>
           <Button disabled={currentPage === 1} onClick={goToPreviousPage}>
-            next
+            {'<'}
           </Button>
         </ListItem>
         {
@@ -40,7 +40,7 @@ export const Pagination: FC < PaginationProps > = ({postsPerPage, totalPosts, pa
       }
         <ListItem>
           <Button disabled={currentPage === postsPerPage} onClick={goToNextPage}>
-            prev
+            {'>'}
           </Button>
         </ListItem>
       </PaginationWrapper>
