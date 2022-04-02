@@ -1,9 +1,10 @@
-import {FC, useEffect} from "react"
+import {FC, useEffect, useState} from "react"
 import {useDispatch, useSelector} from "react-redux";
 import {createSelector} from "reselect";
 import Styled from 'styled-components';
 
 import {Table} from "../components";
+import { Pagination } from "../components/Pagination";
 import {getStockList} from "../store/actions/getStockList";
 
 const getReduxData = createSelector(
@@ -14,37 +15,38 @@ const getReduxData = createSelector(
 export const StockListPage: FC = () => {
   const { stockList } = useSelector(getReduxData)
   const dispatch = useDispatch();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage] = useState(10);
 
   useEffect(() => {
     dispatch(getStockList())
   }, [dispatch]);
+
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = stockList.data.slice(indexOfFirstPost, indexOfLastPost);
+
+  // Change page
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
   console.log(stockList);
   return (
-    <Wrapper>
+    <>
       <TableContainer>
-        <Table data={stockList.data} />
+        <Table data={currentPosts} />
       </TableContainer>
-    </Wrapper>
+      <Pagination
+          postsPerPage={postsPerPage}
+          totalPosts={stockList.data.length}
+          paginate={paginate}
+      />
+    </>
   )
 }
 
-const Wrapper = Styled.div `
-  margin-top: 20px;
-  * {
-    box-sizing: border-box;
-  }
-
-  body {
-    color: #383f4d;
-    line-height: 1.5;
-    font-size: 14px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
-  }
-  `;
-
-  const TableContainer = Styled.div `
-    max-width: 800px;
-    max-height: 600px;
-    margin: 0 auto;
-    overflow: auto;
-  `;
+const TableContainer = Styled.div `
+  max-width: 800px;
+  max-height: 600px;
+  margin: 0 auto;
+  overflow: auto;
+`;

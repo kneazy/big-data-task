@@ -12,7 +12,7 @@ const fetching = (fetching: boolean) => ({
 });
 
 const error = (error: boolean) => ({
-  type: actionsTyps.FETCHING_STOCK_LIST,
+  type: actionsTyps.ERROR_GET_STOCK_LIST,
   payload: error,
 });
 
@@ -25,7 +25,6 @@ export const getStockList = () => async (dispatch: (arg0: { type: string; payloa
         listLimit: 100,
       },
     });
-    console.log(response);
     dispatch(responseData(response));
   } catch (e) {
     dispatch(error(false))
