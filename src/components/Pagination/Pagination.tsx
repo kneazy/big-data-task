@@ -9,7 +9,7 @@ type PaginationProps = {
   currentPage: number
 }
 export const Pagination: FC < PaginationProps > = ({postsPerPage, totalPosts, paginate, setCurrentPage, currentPage}) => {
-  const pageNumbers = [];
+  const pageNumbers: number[] = [];
 
   for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
     pageNumbers.push(i);

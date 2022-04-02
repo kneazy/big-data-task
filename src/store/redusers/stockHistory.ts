@@ -1,3 +1,5 @@
+import type { AnyAction } from "redux";
+import type { HistoryType } from "../../types";
 import { actionsTyps } from "../constants";
 
 const initialState = {
@@ -6,28 +8,14 @@ const initialState = {
   error: false
 };
 
-type HistoryType = {
-  average: number;
-  close: number
-  date: string
-  high: number
-  label: string
-  low: number
-  minute: string
-  notional: number
-  numberOfTrades: number
-  open: number
-  volume: number
-}
 
-
-export type State = {
+export type stockHistoryDataState = {
   data: HistoryType[];
   fetching: boolean;
   error: boolean;
 }
 
-export const stockHistoryData = (state: State = initialState, action: { type: any; payload: any; }) => {
+export const stockHistoryData = (state: stockHistoryDataState = initialState, action: AnyAction) => {
   switch (action.type) {
     case actionsTyps.GET_STOCK_HISTORY:
       return {

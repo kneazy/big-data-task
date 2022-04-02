@@ -5,12 +5,13 @@ import styled from 'styled-components';
 import {Table} from "../components";
 import { Pagination } from "../components";
 import {getStockList} from "../store/actions/getStockList";
-import { ReduxProps } from "../types";
+import { StockListDataState } from "../store/redusers/stockList";
+import type { ReduxProps } from "../types";
 
 const postsPerPage = 10
 
 export const StockListPage: FC = () => {
-  const stockList = useSelector<ReduxProps, any>((state) => state.stockListData)
+  const stockList = useSelector<ReduxProps, StockListDataState>((state) => state.stockListData)
   const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
 

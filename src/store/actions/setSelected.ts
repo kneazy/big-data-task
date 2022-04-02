@@ -1,11 +1,16 @@
+import type { StockType } from "../../types";
 import { actionsTyps } from "../constants";
 
-const selectedStock = (data: any) => ({
+type DispatchType = { 
+  type: string;
+  payload: StockType; 
+}
+
+const selectedStock = (data: StockType) => ({
   type: actionsTyps.SET_SELECTED_STOCK,
   payload: data,
 });
 
-export const setSelected = (selected: any) => (dispatch: (arg0: { type: string; payload: any; }) => void) => {
-  console.log(selected, 'selectedsxasas')
+export const setSelected = (selected: StockType) => (dispatch: (arg0: DispatchType) => void) => {
   dispatch(selectedStock(selected))
 };

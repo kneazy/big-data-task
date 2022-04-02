@@ -1,9 +1,10 @@
+import type { HistoryType } from "../../types";
 import { actionsTyps } from "../constants";
 import { request } from "./request";
 
-const responseData = (res: { data: any }) => ({
+const responseData = ( data: HistoryType[]) => ({
   type: actionsTyps.GET_STOCK_HISTORY,
-  payload: res.data,
+  payload: data,
 });
 
 const fetching = (fetching: boolean) => ({
@@ -16,7 +17,12 @@ const error = (error: boolean) => ({
   payload: error,
 });
 
-export const getStockHistory = (symbol: any, range: any) => async (dispatch: (arg0: { type: string; payload: any; }) => void) => {
+type DispatchType = { 
+  type: string;
+  payload: HistoryType[] | boolean; 
+}
+
+export const getStockHistory = (symbol: string | undefined, range: string) => async (dispatch: (arg0: DispatchType) => void) => {
   dispatch(fetching(true))
   try {
     const response = await request().get(`/stock/${symbol}/chart/${range}`, {
@@ -24,7 +30,7 @@ export const getStockHistory = (symbol: any, range: any) => async (dispatch: (ar
         token: process.env.REACT_APP_API_KEY,
       },
     });
-    dispatch(responseData(response));
+    dispatch(responseData(response.data));
   } catch (e) {
     dispatch(error(false))
     console.error(e);

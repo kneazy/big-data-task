@@ -1,3 +1,5 @@
+import type { AnyAction } from "redux";
+import type { StockType } from "../../types";
 import { actionsTyps } from "../constants";
 
 const initialState = {
@@ -6,7 +8,14 @@ const initialState = {
   error: false
 };
 
-export const stockListData = (state = initialState, action: { type: any; payload: any; }) => {
+export type StockListDataState = {
+  data: StockType[];
+  fetching: boolean;
+  error: boolean;
+}
+
+
+export const stockListData = (state: StockListDataState = initialState, action: AnyAction) => {
   switch (action.type) {
     case actionsTyps.GET_STOCK_LIST:
       return {

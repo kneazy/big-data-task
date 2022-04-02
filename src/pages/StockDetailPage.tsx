@@ -1,12 +1,35 @@
 import styled from 'styled-components';
-import { FC } from 'react';
-import { useSelector } from 'react-redux';
+import { FC, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router';
 
 import { StockChartsContainer } from '../components';
 import { ReduxProps } from '../types';
+import { getStockList } from '../store/actions/getStockList';
+import type { StockListDataState } from '../store/redusers/stockList';
+import type { SelectedState } from '../store/redusers/selected';
+import { setSelected } from '../store/actions/setSelected';
 
 export const StockDeatailPage: FC = () => {
-  const { selected } = useSelector<ReduxProps, any>((state) => state.selectedStock)
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  const stockList = useSelector<ReduxProps, StockListDataState>((state) => state.stockListData)
+  const { selected } = useSelector<ReduxProps, SelectedState>((state) => state.selectedStock)
+
+  useEffect(() => {
+    if (!stockList.data.length) {
+      dispatch(getStockList())
+    }
+  }, [dispatch, stockList.data.length]);
+
+  useEffect(() => {
+    if (!Object.keys(selected).length) {
+      const s = stockList.data.find(({ symbol }) => id === symbol);
+      if (s) {
+        dispatch(setSelected(s))
+      }
+    }
+  }, [dispatch, id, selected, stockList.data]);
 
   return (
     <StockChartWrapper>
@@ -14,8 +37,8 @@ export const StockDeatailPage: FC = () => {
         <div>
           <Title>{selected?.symbol}</Title>
           <Description>{selected?.companyName}</Description>
-          <Earnings>Earnings: 21-121-12</Earnings>
-          <MarketCap>Market Cap: ${selected.marketCap.toLocaleString()}</MarketCap>
+          <Earnings>Earnings: {selected?.latestTime}</Earnings>
+          <MarketCap>Market Cap: ${selected?.marketCap.toLocaleString()}</MarketCap>
         </div>
         <div>
           <Price>{selected.latestPrice}</Price>

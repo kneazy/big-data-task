@@ -4,16 +4,17 @@ import HighchartsReact from 'highcharts-react-official';
 
 import { GroupedHistoryType } from '../types';
 import { getOptions } from '../utils';
+import { useParams } from 'react-router';
 
 type StockChartProps = {
   data: GroupedHistoryType;
 }
 export const StockChart: FC<StockChartProps> = ({ data }) => {
-  if (!data) return null
+  const { id } = useParams();
 
   return <HighchartsReact
     highcharts={Highcharts}
     constructorType={'stockChart'}
-    options={getOptions(data)}
+    options={getOptions(data, id)}
   />
 }

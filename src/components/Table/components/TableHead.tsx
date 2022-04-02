@@ -1,40 +1,39 @@
-import { FC, SetStateAction, useState } from "react";
-
-type SortOrderType = "asc" | "desc";
+import { FC, useState } from "react";
+import { SortOrderEnum } from "../enums";
 
 type TableHeadProps = {
   columns: ColumnType[]
-  handleSorting: (accessor: SetStateAction<string>, sortOrder: SortOrderType) => void;
+  handleSorting: (accessor: string, sortOrder: SortOrderEnum) => void;
 };
 
 type ColumnType = { 
   label: string;
   accessor: string; 
-  sortable: any 
+  sortable: boolean; 
 };
 
 export const TableHead: FC<TableHeadProps> = ({ columns, handleSorting }) => {
 
   const [sortField, setSortField] = useState("");
-  const [order, setOrder] = useState("asc");
+  const [order, setOrder] = useState(SortOrderEnum.ASC);
 
-  const handleSortingChange = (accessor: SetStateAction<string>) => {
-    const sortOrder = accessor === sortField && order === "asc" ? "desc" : "asc";
+  const handleSortingChange = (accessor: string) => {
+    const sortOrder = accessor === sortField && order === SortOrderEnum.ASC ? SortOrderEnum.DESC : SortOrderEnum.ASC;
     setSortField(accessor);
     setOrder(sortOrder);
     handleSorting(accessor, sortOrder);
   };
 
-  const handleClick = (accessor: SetStateAction<string>, sortable: any) => () => sortable ? handleSortingChange(accessor) : null;
+  const handleClick = (accessor: string, sortable: boolean) => () => sortable ? handleSortingChange(accessor) : null;
 
   return (
     <thead>
     <tr>
       {columns.map(({ label, accessor, sortable }) => {
         const cl = sortable
-          ? sortField && sortField === accessor && order === "asc"
+          ? sortField && sortField === accessor && order === SortOrderEnum.ASC
             ? "up"
-            : sortField && sortField === accessor && order === "desc"
+            : sortField && sortField === accessor && order === SortOrderEnum.DESC
             ? "down"
             : "default"
           : "";

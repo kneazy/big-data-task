@@ -1,6 +1,7 @@
-import { GroupedHistoryType, HistoryType } from "./types";
+import type { HistoryType } from "../types";
+import type { GroupedHistoryType } from "./types";
 
-export const getOptions = (data: GroupedHistoryType) => {
+export const getOptions = (data: GroupedHistoryType, name: string | undefined) => {
   let groupingUnits = [
     ['day', [1]],
     ['week', [1]],
@@ -74,7 +75,7 @@ export const getOptions = (data: GroupedHistoryType) => {
     series: [
       {
         type: "line",
-        name: "AAPL",
+        name: name || 'n/a',
         data: data.ohlc,
         dataGrouping: {
           units: groupingUnits

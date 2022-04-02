@@ -1,4 +1,4 @@
-import {FC, useEffect, useState} from "react";
+import {FC, ReactNode, useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
@@ -8,15 +8,22 @@ import {TableBody, TableHead} from "./components";
 import arrowUp from './images/up_arrow.png';
 import arrowDown from './images/down_arrow.png';
 import defaultImage from './images/default.png';
-
-type SortOrderType = "asc" | "desc";
+import { SortOrderEnum } from "./enums";
+import type { StockType } from "../../types";
 
 type TableProps = {
   data: any[];
 };
 
+export type ColumnType = { 
+  label: string;
+  accessor: string; 
+  sortable: boolean; 
+  Cell?: (col: string | number, data?: StockType | undefined) => ReactNode;
+};
+
 export const Table: FC<TableProps> = ({ data }) => {
-  const [tableData, setTableData] = useState<any[]>([]);
+  const [tableData, setTableData] = useState<StockType[]>([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -29,12 +36,13 @@ export const Table: FC<TableProps> = ({ data }) => {
     dispatch(setSelected(data))
   } 
 
-  const columns = [
+  const columns: ColumnType[] = [
     {
       label: "Company Name",
       accessor: "companyName",
       sortable: true,
-      Cell: (col: any, data: any) => <Link to={`./details/${data?.symbol}`} onClick={() => handleRowClick(data)} >{ col }</Link>
+      Cell: (col: string | number, data: StockType | undefined) => 
+        <Link to={`./details/${data?.symbol}`} onClick={() => handleRowClick(data)} >{ col }</Link>
     },
     {
       label: "Symbol",
@@ -50,11 +58,11 @@ export const Table: FC<TableProps> = ({ data }) => {
       label: "Change",
       accessor: "change",
       sortable: false,
-      Cell: (data: number) => <PriceChangeColor isPozitive={data > 0}>{data}</PriceChangeColor>
+      Cell: (data: string | number) => <PriceChangeColor isPozitive={data > 0}>{data}</PriceChangeColor>
     }
   ];
 
-  const handleSorting = (sortField: any, sortOrder: SortOrderType) => {
+  const handleSorting = (sortField: string, sortOrder: SortOrderEnum) => {
     if (sortField) {
       const sorted = [...tableData].sort((a: any, b: any) => {
         if (a[sortField] === null) 
@@ -66,7 +74,7 @@ export const Table: FC<TableProps> = ({ data }) => {
         if (a[sortField] === null && b[sortField] === null) 
           return 0;
         
-        return(a[sortField].toString().localeCompare(b[sortField].toString(), "en", {numeric: true}) * (sortOrder === "asc" ? 1 : -1));
+        return(a[sortField].toString().localeCompare(b[sortField].toString(), "en", {numeric: true}) * (sortOrder === SortOrderEnum.ASC ? 1 : -1));
       });
       setTableData(sorted);
     }

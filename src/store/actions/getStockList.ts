@@ -1,9 +1,10 @@
+import type { StockType } from "../../types";
 import { actionsTyps } from "../constants";
 import { request } from "./request";
 
-const responseData = (res: { data: any }) => ({
+const responseData = (data: StockType[]) => ({
   type: actionsTyps.GET_STOCK_LIST,
-  payload: res.data,
+  payload: data,
 });
 
 const fetching = (fetching: boolean) => ({
@@ -16,7 +17,12 @@ const error = (error: boolean) => ({
   payload: error,
 });
 
-export const getStockList = () => async (dispatch: (arg0: { type: string; payload: any; }) => void) => {
+type DispatchType = { 
+  type: string;
+  payload: StockType[] | boolean; 
+}
+
+export const getStockList = () => async (dispatch: (arg0: DispatchType) => void) => {
   dispatch(fetching(true))
   try {
     const response = await request().get("/stock/market/list/mostactive", {
@@ -25,7 +31,7 @@ export const getStockList = () => async (dispatch: (arg0: { type: string; payloa
         listLimit: 100,
       },
     });
-    dispatch(responseData(response));
+    dispatch(responseData(response.data));
   } catch (e) {
     dispatch(error(false))
     console.error(e);
